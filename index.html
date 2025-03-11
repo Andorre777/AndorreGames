@@ -10,6 +10,31 @@
     <div class="container">
         <h1>All My Games: Completed, In Progress, or Abandoned</h1>
         <p>Try out all the games I've made! Have fun!</p>
+        
+        <div class="game" onclick="window.location.href='game1.html'" onmouseover="showInfo('info1')" onmouseout="hideInfo('info1')">
+            <div class="game-title">Game 1</div>
+            <div id="info1" class="game-info">Status: Completed - A fun puzzle game!</div>
+        </div>
+        
+        <div class="game" onclick="window.location.href='game2.html'" onmouseover="showInfo('info2')" onmouseout="hideInfo('info2')">
+            <div class="game-title">Game 2</div>
+            <div id="info2" class="game-info">Status: In Progress - A challenging platformer!</div>
+        </div>
+        
+        <div class="game" onclick="window.location.href='game3.html'" onmouseover="showInfo('info3')" onmouseout="hideInfo('info3')">
+            <div class="game-title">Game 3</div>
+            <div id="info3" class="game-info">Status: Abandoned - An experimental horror game.</div>
+        </div>
     </div>
+
+    <script>
+        function showInfo(id) {
+            document.getElementById(id).style.display = 'block';
+        }
+
+        function hideInfo(id) {
+            document.getElementById(id).style.display = 'none';
+        }
+    </script>
 </body>
 </html>
