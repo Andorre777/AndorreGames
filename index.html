@@ -15,49 +15,68 @@
         </div>
 
         <!-- Grille des jeux -->
-        <div class="games-grid">
-            <div class="game" onclick="window.location.href='game1.html'" onmouseover="showInfo('info1')" onmouseout="hideInfo('info1')">
-                <div class="game-title">Game 1</div>
-                <div id="info1" class="game-info">Status: Completed - A fun puzzle game!</div>
-            </div>
-
-            <div class="game" onclick="window.location.href='game2.html'" onmouseover="showInfo('info2')" onmouseout="hideInfo('info2')">
-                <div class="game-title">Game 2</div>
-                <div id="info2" class="game-info">Status: In Progress - A challenging platformer!</div>
-            </div>
-
-            <div class="game" onclick="window.location.href='game3.html'" onmouseover="showInfo('info3')" onmouseout="hideInfo('info3')">
-                <div class="game-title">Game 3</div>
-                <div id="info3" class="game-info">Status: Abandoned - An experimental horror game.</div>
-            </div>
-
-           <div class="game" onclick="window.location.href='game4.html'" onmouseover="showInfo('info4')" onmouseout="hideInfo('info4')">
-    <img src="spaceshooter.png" alt="Space Shooter Preview" class="game-preview">
-    <div class="game-title">Game 4 - Space Shooter</div>
-    <div id="info4" class="game-info">Status: Completed - An exciting space shooter! Blast your way through enemy ships and survive as long as you can!</div>
-           </div>
-
-
-            <div class="game" onclick="window.location.href='game5.html'" onmouseover="showInfo('info5')" onmouseout="hideInfo('info5')">
-                <div class="game-title">Game 5</div>
-                <div id="info5" class="game-info">Status: In Progress - A magical fantasy world adventure!</div>
-            </div>
-
-            <div class="game" onclick="window.location.href='game6.html'" onmouseover="showInfo('info6')" onmouseout="hideInfo('info6')">
-                <div class="game-title">Game 6</div>
-                <div id="info6" class="game-info">Status: Abandoned - A spooky mystery in a haunted mansion.</div>
-            </div>
-        </div>
+        <div id="games-grid" class="games-grid"></div>
     </div>
 
     <script>
-        function showInfo(id) {
-            document.getElementById(id).style.display = 'block';
+        // Jeux disponibles
+        const games = [
+            { id: 'game1', title: 'Game 1', description: 'A fun puzzle game!', status: 'Completed' },
+            { id: 'game2', title: 'Game 2', description: 'A challenging platformer!', status: 'In Progress' },
+            { id: 'game3', title: 'Game 3', description: 'An experimental horror game.', status: 'Abandoned' },
+            { id: 'game4', title: 'Space Shooter', description: 'An exciting space shooter!', status: 'Completed' },
+            { id: 'game5', title: 'Game 5', description: 'A fun RPG adventure!', status: 'In Progress' },
+            { id: 'game6', title: 'Game 6', description: 'An artistic exploration game.', status: 'Abandoned' }
+        ];
+
+        // Fonction pour charger les vues et likes depuis localStorage
+        function loadStats() {
+            return games.map(game => {
+                game.views = parseInt(localStorage.getItem(`${game.id}-views`) || '0');
+                game.likes = parseInt(localStorage.getItem(`${game.id}-likes`) || '0');
+                return game;
+            });
         }
 
-        function hideInfo(id) {
-            document.getElementById(id).style.display = 'none';
+        // Fonction pour afficher les jeux triés par vues
+        function displayGames() {
+            const sortedGames = loadStats().sort((a, b) => b.views - a.views);
+            const gamesGrid = document.getElementById('games-grid');
+            gamesGrid.innerHTML = '';
+
+            sortedGames.forEach(game => {
+                const gameElement = document.createElement('div');
+                gameElement.className = 'game';
+                gameElement.innerHTML = `
+                    <div onclick="openGame('${game.id}')">
+                        <div class="game-title">${game.title}</div>
+                        <div class="game-info">${game.description} (Status: ${game.status})</div>
+                        <div>Views: ${game.views} | Likes: ${game.likes}</div>
+                    </div>
+                    <button onclick="likeGame('${game.id}', event)">❤️ Like</button>
+                `;
+                gamesGrid.appendChild(gameElement);
+            });
         }
+
+        // Fonction d'ouverture de jeu
+        function openGame(gameId) {
+            let views = parseInt(localStorage.getItem(`${gameId}-views`) || '0');
+            views++;
+            localStorage.setItem(`${gameId}-views`, views.toString());
+            window.location.href = `${gameId}.html`;
+        }
+
+        // Fonction d'ajout de Like
+        function likeGame(gameId, event) {
+            event.stopPropagation();
+            let likes = parseInt(localStorage.getItem(`${gameId}-likes`) || '0');
+            likes++;
+            localStorage.setItem(`${gameId}-likes`, likes.toString());
+            displayGames();
+        }
+
+        displayGames();
     </script>
 </body>
 </html>
