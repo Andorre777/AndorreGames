@@ -10,20 +10,20 @@ body {
     min-height: 100vh;
 }
 
-.main-container {
+.container {
     width: 90%;
     max-width: 1200px;
     margin-top: 40px;
 }
 
-/* Section du titre */
+/* Titre principal dans son propre rectangle */
 .header {
     text-align: center;
     background: rgba(255, 255, 255, 0.9);
     padding: 30px;
     border-radius: 12px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    margin-bottom: 30px;
+    margin-bottom: 30px; /* Espace pour séparer les jeux du titre */
 }
 
 /* Grille des jeux */
@@ -50,7 +50,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
-/* Informations des jeux */
+/* Texte explicatif qui apparaît au survol */
 .game-info {
     margin-top: 10px;
     display: none;
