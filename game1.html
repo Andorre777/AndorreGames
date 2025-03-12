@@ -7,61 +7,31 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Bouton de retour en haut à gauche -->
-    <button class="back-button" onclick="window.location.href='index.html'">←</button>
+    <button onclick="window.location.href='index.html'" class="back-button">←</button>
 
     <div class="game-container">
-        <h1>Game 1 - Puzzle Adventure</h1>
-        <p>Welcome to Game 1! Have fun solving the puzzles and reaching new levels!</p>
+        <h1>Game 1</h1>
+        <p>Have fun solving the puzzles and reaching the end!</p>
         
-        <!-- Rectangle pour le jeu -->
-        <div class="game-box">Game will be displayed here.</div>
+        <div class="game-area">[Your Game Here]</div>
 
-        <!-- Section des recommandations -->
-        <div class="recommendations" id="recommendations"></div>
+        <div id="recommendations"></div>
     </div>
 
-    <!-- Script JavaScript -->
     <script>
-        // Base de données des jeux disponibles
-        const gamesDatabase = [
-            { name: "Puzzle Adventure", link: "game1.html", status: "Finished" },
-            { name: "The Platformer's Quest", link: "game2.html", status: "In Progress" },
-            { name: "The Haunted Experiment", link: "game3.html", status: "Abandoned" },
-            { name: "Space Shooter", link: "game4.html", status: "Finished" },
-            { name: "Fantasy World", link: "game5.html", status: "In Progress" },
-            { name: "Mystery Mansion", link: "game6.html", status: "Abandoned" }
-        ];
+        const allGames = ['game2', 'game3', 'game4', 'game5', 'game6'];
+        const currentGame = 'game1';
+        let recommendedGames = allGames.filter(game => game !== currentGame);
 
-        // Fonction pour choisir trois jeux aléatoires
-        function getRandomGames(currentGame) {
-            const filteredGames = gamesDatabase.filter(game => game.link !== currentGame);
-            const shuffled = filteredGames.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 3);
-        }
+        // Randomly pick 3 recommendations
+        recommendedGames = recommendedGames.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-        // Affichage des recommandations
-        function displayRecommendations() {
-            const recommendationsDiv = document.getElementById('recommendations');
-            const currentGame = window.location.pathname.split('/').pop();
-            const randomGames = getRandomGames(currentGame);
+        const recommendationsDiv = document.getElementById('recommendations');
+        recommendationsDiv.innerHTML = '<h2>Recommended Games:</h2>';
 
-            let recommendationsHTML = '<h2>Other Games You Might Like:</h2><div class="recommendation-list">';
-            
-            randomGames.forEach(game => {
-                recommendationsHTML += `
-                    <div class="recommendation-box" onclick="window.location.href='${game.link}'">
-                        <h3>${game.name}</h3>
-                        <p>Status: ${game.status}</p>
-                    </div>
-                `;
-            });
-
-            recommendationsHTML += '</div>';
-            recommendationsDiv.innerHTML = recommendationsHTML;
-        }
-
-        displayRecommendations();
+        recommendedGames.forEach(game => {
+            recommendationsDiv.innerHTML += `<div class='game' onclick="window.location.href='${game}.html'">${game}</div>`;
+        });
     </script>
 </body>
 </html>
