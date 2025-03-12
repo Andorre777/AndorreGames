@@ -3,65 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
+    <title>All My Games</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <!-- Bouton de retour en haut à gauche -->
-    <button class="back-button" onclick="window.location.href='index.html'">←</button>
+    <div class="container">
+        <!-- Titre Principal -->
+        <div class="header">
+            <h1>All My Games: Completed, In Progress, or Abandoned</h1>
+            <p>Try out all the games I've made! Have fun!</p>
+        </div>
 
-    <div class="game-container">
-         <h1>Game 3 - The Haunted Experiment</h1>
-<p>Welcome to Game 3... An unfinished horror game where darkness and mystery await. Unfortunately, the project has been left behind. Feel free to explore what remains of it.</p>
-        
-        <!-- Rectangle pour le jeu -->
-        <div class="game-box">Game will be displayed here.</div>
-
-        <!-- Section des recommandations -->
-        <div class="recommendations" id="recommendations"></div>
+        <!-- Grille des jeux -->
+        <div id="games-grid" class="games-grid"></div>
     </div>
 
-    <!-- Script JavaScript -->
     <script>
-        // Base de données des jeux disponibles
-        const gamesDatabase = [
-            { name: "Puzzle Adventure", link: "game1.html", status: "Finished" },
-            { name: "The Platformer's Quest", link: "game2.html", status: "In Progress" },
-            { name: "The Haunted Experiment", link: "game3.html", status: "Abandoned" },
-            { name: "Space Shooter", link: "game4.html", status: "Finished" },
-            { name: "Fantasy World", link: "game5.html", status: "In Progress" },
-            { name: "Mystery Mansion", link: "game6.html", status: "Abandoned" }
+        // Jeux disponibles
+        const games = [
+            { id: 'game1', title: 'Game 1', description: 'A fun puzzle game!', status: 'Completed', img: 'images/game1.png' },
+            { id: 'game2', title: 'Game 2', description: 'A challenging platformer!', status: 'In Progress', img: 'images/game2.png' },
+            { id: 'game3', title: 'Game 3', description: 'An experimental horror game.', status: 'Abandoned', img: 'images/game3.png' },
+            { id: 'game4', title: 'Space Shooter', description: 'An exciting space shooter!', status: 'Completed', img: 'images/game4.png' },
+            { id: 'game5', title: 'Game 5', description: 'A fun RPG adventure!', status: 'In Progress', img: 'images/game5.png' },
+            { id: 'game6', title: 'Game 6', description: 'An artistic exploration game.', status: 'Abandoned', img: 'images/game6.png' }
         ];
 
-        // Fonction pour choisir trois jeux aléatoires
-        function getRandomGames(currentGame) {
-            const filteredGames = gamesDatabase.filter(game => game.link !== currentGame);
-            const shuffled = filteredGames.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 3);
-        }
-
-        // Affichage des recommandations
-        function displayRecommendations() {
-            const recommendationsDiv = document.getElementById('recommendations');
-            const currentGame = window.location.pathname.split('/').pop();
-            const randomGames = getRandomGames(currentGame);
-
-            let recommendationsHTML = '<h2>Other Games You Might Like:</h2><div class="recommendation-list">';
-            
-            randomGames.forEach(game => {
-                recommendationsHTML += `
-                    <div class="recommendation-box" onclick="window.location.href='${game.link}'">
-                        <h3>${game.name}</h3>
-                        <p>Status: ${game.status}</p>
-                    </div>
-                `;
+        function loadStats() {
+            return games.map(game => {
+                game.views = parseInt(localStorage.getItem(`${game.id}-views`) || '0');
+                game.likes = parseInt(localStorage.getItem(`${game.id}-likes`) || '0');
+                return game;
             });
-
-            recommendationsHTML += '</div>';
-            recommendationsDiv.innerHTML = recommendationsHTML;
         }
 
-        displayRecommendations();
+        function displayGames() {
+            const sortedGames = loadStats().sort((a, b) => b.views - a.views);
+            const gamesGrid = document.getElementById('games-grid');
+            gamesGrid.innerHTML = '';
+
+            sortedGames.forEach(game => {
+                const gameElement = document.createElement('div');
+                gameElement.className = 'game';
+                gameElement.innerHTML = `
+                    <div onclick="openGame('${game.id}')">
+                        <div class="game-title">${game.title}</div>
+                        <img src="${game.img}" alt="${game.title}" class="game-image">
+                        <div class="game-info">${game.description} (Status: ${game.status})</div>
+                        <div>Views: ${game.views} | Likes: ${game.likes}</div>
+                    </div>
+                    <button onclick="likeGame('${game.id}', event)">❤️ Like</button>
+                `;
+                gamesGrid.appendChild(gameElement);
+            });
+        }
+
+        function openGame(gameId) {
+            let views = parseInt(localStorage.getItem(`${gameId}-views`) || '0');
+            views++;
+            localStorage.setItem(`${gameId}-views`, views.toString());
+            window.location.href = `${gameId}.html`;
+        }
+
+        function likeGame(gameId, event) {
+            event.stopPropagation();
+            let likes = parseInt(localStorage.getItem(`${gameId}-likes`) || '0');
+            likes++;
+            localStorage.setItem(`${gameId}-likes`, likes.toString());
+            displayGames();
+        }
+
+        displayGames();
     </script>
 </body>
 </html>
