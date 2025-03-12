@@ -14,8 +14,95 @@
         <h1>Game 4 - Space Shooter</h1>
         <p>Status: Completed - An exciting space shooter! Blast your way through enemy ships and survive as long as you can!</p>
         
+              
         <!-- Rectangle pour le jeu -->
-        <div class="game-box">Game will be displayed here.</div>
+        <canvas id="gameCanvas" width="480" height="640"></canvas>
+    </div>
+
+    <!-- Script du jeu Space Shooter -->
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const player = {
+            x: 200,
+            y: 550,
+            width: 50,
+            height: 50,
+            speed: 5,
+            bullets: []
+        };
+
+        const enemies = [];
+        const enemySpeed = 2;
+        const bulletSpeed = 4;
+
+        function drawPlayer() {
+            ctx.fillStyle = "blue";
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawEnemies() {
+            ctx.fillStyle = "red";
+            enemies.forEach(enemy => ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height));
+        }
+
+        function drawBullets() {
+            ctx.fillStyle = "yellow";
+            player.bullets.forEach(bullet => ctx.fillRect(bullet.x, bullet.y, 5, 10));
+        }
+
+        function update() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Déplacement des balles
+            player.bullets.forEach((bullet, index) => {
+                bullet.y -= bulletSpeed;
+                if (bullet.y < 0) player.bullets.splice(index, 1);
+            });
+
+            // Déplacement des ennemis
+            enemies.forEach((enemy, index) => {
+                enemy.y += enemySpeed;
+                if (enemy.y > canvas.height) enemies.splice(index, 1);
+            });
+
+            // Collision balle-ennemi
+            player.bullets.forEach((bullet, bulletIndex) => {
+                enemies.forEach((enemy, enemyIndex) => {
+                    if (bullet.x < enemy.x + enemy.width &&
+                        bullet.x + 5 > enemy.x &&
+                        bullet.y < enemy.y + enemy.height &&
+                        bullet.y + 10 > enemy.y) {
+                        
+                        enemies.splice(enemyIndex, 1);
+                        player.bullets.splice(bulletIndex, 1);
+                    }
+                });
+            });
+
+            drawPlayer();
+            drawEnemies();
+            drawBullets();
+
+            requestAnimationFrame(update);
+        }
+
+        function createEnemy() {
+            const x = Math.random() * (canvas.width - 30);
+            enemies.push({ x, y: 0, width: 30, height: 30 });
+        }
+
+        setInterval(createEnemy, 1000);
+
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" && player.x + player.width < canvas.width) player.x += player.speed;
+            if (e.key === "ArrowLeft" && player.x > 0) player.x -= player.speed;
+            if (e.key === " ") player.bullets.push({ x: player.x + 22.5, y: player.y });
+        });
+
+        update();
+    </script>
 
         <!-- Section des recommandations -->
         <div class="recommendations" id="recommendations"></div>
