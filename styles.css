@@ -132,28 +132,26 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Recommandations */
-.recommendations {
-    margin-top: 40px;
-    text-align: left;
+/* Conteneur des recommandations */
+.recommendation-list {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
 }
 
-.recommendations h2 {
-    margin-bottom: 10px;
+/* Rectangle de recommandation */
+.recommendation-box {
+    width: 30%;
+    padding: 15px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.recommendations ul {
-    list-style: none;
-    padding: 0;
+.recommendation-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
-
-.recommendations li a {
-    text-decoration: none;
-    color: #0096c7;
-    transition: color 0.2s;
-}
-
-.recommendations li a:hover {
-    color: #005f73;
-}
-
