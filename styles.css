@@ -13,7 +13,7 @@ body {
 .container {
     width: 90%;
     max-width: 1200px;
-    margin-top: 400px;
+    margin-top: 40px;
 }
 
 /* Titre principal dans son propre rectangle */
@@ -36,7 +36,7 @@ body {
 /* Rectangle de jeu */
 .game {
     background: linear-gradient(135deg, rgba(0, 153, 255, 0.6), rgba(0, 255, 153, 0.6));
-    padding: 20px;
+    padding: 40px;
     border-radius: 15px;
     text-align: center;
     cursor: pointer;
