@@ -79,12 +79,14 @@ body {
 
 /* Bouton de retour stylé */
 .back-button {
-    margin-top: 30px;
-    padding: 15px 25px;
-    font-size: 1.5rem;
+    position: absolute;          /* Positionné en haut à gauche */
+    top: 20px;
+    left: 20px;
+    padding: 10px 30px;           /* Allongé pour bien montrer que c'est un bouton de retour */
+    font-size: 1.2rem;
     background: linear-gradient(135deg, #00b4d8, #90e0ef);
     border: none;
-    border-radius: 50px;  /* Bouton bien arrondi */
+    border-radius: 30px;          /* Arrondi mais pas trop pour un beau rendu */
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
     color: white;
@@ -93,7 +95,25 @@ body {
 
 .back-button:hover {
     background: linear-gradient(135deg, #0096c7, #48cae4);
-    transform: scale(1.1);
+    transform: scale(1.05);
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
+
+/* Pour éviter que le bouton soit caché par le contenu principal */
+body {
+    position: relative;
+}
+
+/* Style pour la page de jeu */
+.game-container {
+    text-align: center;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 40px;
+    margin: 60px auto; /* On descend un peu pour ne pas que le bouton cache le contenu */
+    width: 80%;
+    max-width: 800px;
+    border-radius: 12px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
 
