@@ -3,152 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Game 1</title>
+    <title>Space Shooter</title>
     <link rel="stylesheet" href="styles.css">
+    <style>
+        canvas {
+            display: block;
+            margin: 20px auto;
+            border: 2px solid white;
+            background-color: black;
+        }
+    </style>
 </head>
 <body>
-    <!-- Bouton de retour en haut à gauche -->
-    <button class="back-button" onclick="window.location.href='index.html'">←</button>
+    <button onclick="window.location.href='index.html'" class="back-button">←</button>
 
     <div class="game-container">
-        <h1>Game 4 - Space Shooter</h1>
-        <p>Status: Completed - An exciting space shooter! Blast your way through enemy ships and survive as long as you can!</p>
-        
-              
-        <!-- Rectangle pour le jeu -->
-        <canvas id="gameCanvas" width="480" height="640"></canvas>
+        <h1>Space Shooter</h1>
+        <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+        <div id="recommendations"></div>
     </div>
 
-    <!-- Script du jeu Space Shooter -->
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
+        const allGames = ['game1', 'game2', 'game3', 'game5', 'game6'];
+        const currentGame = 'game4';
+        let recommendedGames = allGames.filter(game => game !== currentGame);
 
-        const player = {
-            x: 200,
-            y: 550,
-            width: 50,
-            height: 50,
-            speed: 5,
-            bullets: []
-        };
+        recommendedGames = recommendedGames.sort(() => 0.5 - Math.random()).slice(0, 3);
 
-        const enemies = [];
-        const enemySpeed = 2;
-        const bulletSpeed = 4;
+        const recommendationsDiv = document.getElementById('recommendations');
+        recommendationsDiv.innerHTML = '<h2>Recommended Games:</h2>';
+
+        recommendedGames.forEach(game => {
+            recommendationsDiv.innerHTML += `<div class='game' onclick="window.location.href='${game}.html'">${game}</div>`;
+        });
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let player = { x: 370, y: 500, width: 60, height: 20, speed: 7 };
+        let bullets = [];
+        let enemies = [];
 
         function drawPlayer() {
-            ctx.fillStyle = "blue";
+            ctx.fillStyle = 'lime';
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
-        function drawEnemies() {
-            ctx.fillStyle = "red";
-            enemies.forEach(enemy => ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height));
+        function drawBullets() {
+            ctx.fillStyle = 'red';
+            bullets.forEach(bullet => {
+                ctx.fillRect(bullet.x, bullet.y, 5, 10);
+            });
         }
 
-        function drawBullets() {
-            ctx.fillStyle = "yellow";
-            player.bullets.forEach(bullet => ctx.fillRect(bullet.x, bullet.y, 5, 10));
+        function drawEnemies() {
+            ctx.fillStyle = 'orange';
+            enemies.forEach(enemy => {
+                ctx.fillRect(enemy.x, enemy.y, 40, 40);
+            });
         }
 
         function update() {
+            bullets = bullets.filter(bullet => bullet.y > 0);
+            bullets.forEach(bullet => bullet.y -= 5);
+
+            enemies.forEach(enemy => enemy.y += 2);
+
+            enemies = enemies.filter(enemy => enemy.y < canvas.height);
+        }
+
+        function spawnEnemy() {
+            enemies.push({ x: Math.random() * (canvas.width - 40), y: -40 });
+        }
+
+        function gameLoop() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Déplacement des balles
-            player.bullets.forEach((bullet, index) => {
-                bullet.y -= bulletSpeed;
-                if (bullet.y < 0) player.bullets.splice(index, 1);
-            });
-
-            // Déplacement des ennemis
-            enemies.forEach((enemy, index) => {
-                enemy.y += enemySpeed;
-                if (enemy.y > canvas.height) enemies.splice(index, 1);
-            });
-
-            // Collision balle-ennemi
-            player.bullets.forEach((bullet, bulletIndex) => {
-                enemies.forEach((enemy, enemyIndex) => {
-                    if (bullet.x < enemy.x + enemy.width &&
-                        bullet.x + 5 > enemy.x &&
-                        bullet.y < enemy.y + enemy.height &&
-                        bullet.y + 10 > enemy.y) {
-                        
-                        enemies.splice(enemyIndex, 1);
-                        player.bullets.splice(bulletIndex, 1);
-                    }
-                });
-            });
-
             drawPlayer();
-            drawEnemies();
             drawBullets();
+            drawEnemies();
+            update();
 
-            requestAnimationFrame(update);
+            requestAnimationFrame(gameLoop);
         }
 
-        function createEnemy() {
-            const x = Math.random() * (canvas.width - 30);
-            enemies.push({ x, y: 0, width: 30, height: 30 });
-        }
-
-        setInterval(createEnemy, 1000);
-
-        document.addEventListener("keydown", (e) => {
-            if (e.key === "ArrowRight" && player.x + player.width < canvas.width) player.x += player.speed;
-            if (e.key === "ArrowLeft" && player.x > 0) player.x -= player.speed;
-            if (e.key === " ") player.bullets.push({ x: player.x + 22.5, y: player.y });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && player.x > 0) player.x -= player.speed;
+            if (e.key === 'ArrowRight' && player.x < canvas.width - player.width) player.x += player.speed;
+            if (e.key === ' ') bullets.push({ x: player.x + 27, y: player.y });
         });
 
-        update();
-    </script>
-
-        <!-- Section des recommandations -->
-        <div class="recommendations" id="recommendations"></div>
-    </div>
-
-    <!-- Script JavaScript -->
-    <script>
-        // Base de données des jeux disponibles
-        const gamesDatabase = [
-            { name: "Puzzle Adventure", link: "game1.html", status: "Finished" },
-            { name: "The Platformer's Quest", link: "game2.html", status: "In Progress" },
-            { name: "The Haunted Experiment", link: "game3.html", status: "Abandoned" },
-            { name: "Space Shooter", link: "game4.html", status: "Finished" },
-            { name: "Fantasy World", link: "game5.html", status: "In Progress" },
-            { name: "Mystery Mansion", link: "game6.html", status: "Abandoned" }
-        ];
-
-        // Fonction pour choisir trois jeux aléatoires
-        function getRandomGames(currentGame) {
-            const filteredGames = gamesDatabase.filter(game => game.link !== currentGame);
-            const shuffled = filteredGames.sort(() => 0.5 - Math.random());
-            return shuffled.slice(0, 3);
-        }
-
-        // Affichage des recommandations
-        function displayRecommendations() {
-            const recommendationsDiv = document.getElementById('recommendations');
-            const currentGame = window.location.pathname.split('/').pop();
-            const randomGames = getRandomGames(currentGame);
-
-            let recommendationsHTML = '<h2>Other Games You Might Like:</h2><div class="recommendation-list">';
-            
-            randomGames.forEach(game => {
-                recommendationsHTML += `
-                    <div class="recommendation-box" onclick="window.location.href='${game.link}'">
-                        <h3>${game.name}</h3>
-                        <p>Status: ${game.status}</p>
-                    </div>
-                `;
-            });
-
-            recommendationsHTML += '</div>';
-            recommendationsDiv.innerHTML = recommendationsHTML;
-        }
-
-        displayRecommendations();
+        setInterval(spawnEnemy, 1000);
+        gameLoop();
     </script>
 </body>
 </html>
