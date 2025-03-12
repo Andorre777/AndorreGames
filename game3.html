@@ -11,23 +11,61 @@
     <button class="back-button" onclick="window.location.href='index.html'">←</button>
 
     <div class="game-container">
-        <h1>Game 3 - The Haunted Experiment</h1>
+         <h1>Game 3 - The Haunted Experiment</h1>
 <p>Welcome to Game 3... An unfinished horror game where darkness and mystery await. Unfortunately, the project has been left behind. Feel free to explore what remains of it.</p>
         
         <!-- Rectangle pour le jeu -->
         <div class="game-box">Game will be displayed here.</div>
 
-        <!-- Recommandations d'autres jeux -->
-        <div class="recommendations">
-            <h2>Other Games You Might Like:</h2>
-            <ul>
-                <li><a href="game2.html">Game 2 - The Platformer's Quest</a></li>
-                <li><a href="game3.html">Game 3 - The Haunted Experiment</a></li>
-            </ul>
-        </div>
+        <!-- Section des recommandations -->
+        <div class="recommendations" id="recommendations"></div>
     </div>
+
+    <!-- Script JavaScript -->
+    <script>
+        // Base de données des jeux disponibles
+        const gamesDatabase = [
+            { name: "Puzzle Adventure", link: "game1.html", status: "Finished" },
+            { name: "The Platformer's Quest", link: "game2.html", status: "In Progress" },
+            { name: "The Haunted Experiment", link: "game3.html", status: "Abandoned" },
+            { name: "Space Shooter", link: "game4.html", status: "Finished" },
+            { name: "Fantasy World", link: "game5.html", status: "In Progress" },
+            { name: "Mystery Mansion", link: "game6.html", status: "Abandoned" }
+        ];
+
+        // Fonction pour choisir trois jeux aléatoires
+        function getRandomGames(currentGame) {
+            const filteredGames = gamesDatabase.filter(game => game.link !== currentGame);
+            const shuffled = filteredGames.sort(() => 0.5 - Math.random());
+            return shuffled.slice(0, 3);
+        }
+
+        // Affichage des recommandations
+        function displayRecommendations() {
+            const recommendationsDiv = document.getElementById('recommendations');
+            const currentGame = window.location.pathname.split('/').pop();
+            const randomGames = getRandomGames(currentGame);
+
+            let recommendationsHTML = '<h2>Other Games You Might Like:</h2><div class="recommendation-list">';
+            
+            randomGames.forEach(game => {
+                recommendationsHTML += `
+                    <div class="recommendation-box" onclick="window.location.href='${game.link}'">
+                        <h3>${game.name}</h3>
+                        <p>Status: ${game.status}</p>
+                    </div>
+                `;
+            });
+
+            recommendationsHTML += '</div>';
+            recommendationsDiv.innerHTML = recommendationsHTML;
+        }
+
+        displayRecommendations();
+    </script>
 </body>
 </html>
+
 
 
 
